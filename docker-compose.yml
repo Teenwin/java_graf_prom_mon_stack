@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  prometheus:
+    image: ubuntu/prometheus:3-24.04_stable
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    ports: ["9090:9090"]
+    networks: [monitor-net]
+    depends_on: [app]
+
+  grafana:
+    image: grafana/grafana-oss:12.4.0-ubuntu
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+#      - TELEGRAМ_BOT_TOKEN=
+#      - TELEGRAM_CHAT_ID=
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana-data:/var/lib/grafana
+    ports: ["3000:3000"]
+    networks: [monitor-net]
+    depends_on: [prometheus]
+
+  app:
+    build: ./demo-java-app
+    ports: ["8080:8080"]
+    networks: [monitor-net]
+    
+networks:
+  monitor-net:
+volumes:
+  prometheus-data:
+  grafana-data:

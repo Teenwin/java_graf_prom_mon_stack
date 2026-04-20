@@ -1,0 +1,26 @@
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: "backend_alerts"
+    folder: "Alerts"
+    interval: 1m
+    rules:
+      - uid: critical-5xx
+        title: "Critical 5xx Errors"
+        condition: A
+        data:
+          - refId: A
+            relativeTimeRange: { from: 60, to: 0 }
+            datasourceUid: "prometheus"
+            model:
+              expr: sum(rate(http_server_requests_seconds_count{status=~"5.."}[1m])) > 0
+              intervalMs: 1000
+              maxDataPoints: 43200
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          summary: "Высокий процент 5xx ошибок"
+        labels:
+          severity: critical
+        isPaused: false
