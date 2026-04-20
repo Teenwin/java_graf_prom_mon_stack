@@ -7,10 +7,10 @@
 - Prometheus
 - Grafana
 
-Использовани:
-1) билдим приложение java
+Использование:
+- билдим приложение java
 docker-compose build --no-cache
-2) запускаем стек grafana prometheus java-app
+- запускаем стек grafana prometheus java-app
 docker-compose up -d
-3) остановка стека
+- остановка стека
 docker-compose down
